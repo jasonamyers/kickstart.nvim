@@ -409,9 +409,9 @@ end
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
+  tsserver = {},
 
   lua_ls = {
     Lua = {
@@ -451,6 +451,7 @@ mason_lspconfig.setup_handlers {
 -- nvim-cmp setup
 local cmp = require 'cmp'
 local luasnip = require 'luasnip'
+local lspkind = require 'lspkind'
 
 luasnip.config.setup {}
 
@@ -459,6 +460,13 @@ cmp.setup {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
+  },
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol', -- show only symbol annotations
+      maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+      ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+      })
   },
   mapping = cmp.mapping.preset.insert {
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -488,8 +496,9 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
+    { name = "copilot", group_index = 2 },
+    { name = 'nvim_lsp', group_index = 2 },
+    { name = 'luasnip', group_index = 2 },
   },
 }
 
